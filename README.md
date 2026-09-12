@@ -68,6 +68,9 @@ HTTP Engine: curl_cffi
 
 Packaging: PyInstaller
 
+🤖 Development Note (Vibecoding)
+This project was built using a "vibecoding" approach. The core logic, UI generation, and Cloudflare bypass integrations were developed collaboratively with AI, allowing for rapid prototyping and deployment of a fully functional desktop application in a fraction of the usual time.
+
 📝 Disclaimer
 This tool is an unofficial community project and is not affiliated with, maintained, or endorsed by Letterboxd Limited.
 
