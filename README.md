@@ -1,9 +1,9 @@
-<div align="center">
+﻿<div align="center">
 
 # 🎬 Letterboxd Tracker
 ### A clean, modern desktop tool to find who isn't following you back on Letterboxd.
 
-[![Release](https://img.shields.io/badge/Release-v1.0.0-00e054?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/YOUR_USERNAME/letterboxd-tracker/releases)
+[![Release](https://img.shields.io/badge/Release-v1.0.0-00e054?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/azradeger/letterboxd-tracker/releases)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
@@ -29,7 +29,7 @@ Letterboxd does not provide a direct way to view mutual follows or see who doesn
 
 You do not need to install Python or run any commands.
 
-1. Go to the **[Releases](https://github.com/YOUR_USERNAME/letterboxd-tracker/releases/latest)** section.
+1. Go to the **[Releases](https://github.com/azradeger/letterboxd-tracker/releases/latest)** section.
 2. Download the latest **`LetterboxdTracker.exe`**.
 3. Double-click the file to open the app.
 4. Enter your username and click **Analyze**.
@@ -42,7 +42,7 @@ If you prefer to run or build the app from source code:
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/YOUR_USERNAME/letterboxd-tracker.git](https://github.com/YOUR_USERNAME/letterboxd-tracker.git)
+git clone [https://github.com/azradeger/letterboxd-tracker.git](https://github.com/azradeger/letterboxd-tracker.git)
 cd letterboxd-tracker
 2. Set up virtual environment
 PowerShell
