@@ -1,5 +1,7 @@
+import io
 import threading
 import webbrowser
+from PIL import Image, ImageDraw
 from bs4 import BeautifulSoup
 import customtkinter as ctk
 from curl_cffi import requests as cffi_requests
@@ -141,7 +143,7 @@ class LetterboxdTrackerApp(ctk.CTk):
                 
                 soup = BeautifulSoup(res.content, "html.parser")
                 
-                person_elements = soup.select("td.table-person, tr.person-summary, div.person-summary, table.person-table tr")
+                person_elements = soup.select("table.person-table tr, td.table-person, div.person-summary")
                 if not person_elements:
                     person_elements = soup.select("a.avatar, a.name, h3.title-3 a")
 
@@ -150,6 +152,11 @@ class LetterboxdTrackerApp(ctk.CTk):
 
                 found_in_page = False
                 for el in person_elements:
+                    avatar_url = None
+                    img_tag = el.find("img")
+                    if img_tag and img_tag.get("src"):
+                        avatar_url = img_tag.get("src")
+
                     links = [el] if el.name == "a" else el.find_all("a")
                     for a in links:
                         href = a.get("href", "").strip("/")
@@ -161,8 +168,8 @@ class LetterboxdTrackerApp(ctk.CTk):
                             handle = parts[0].lower()
                             if handle not in ignore_slugs and handle != username.lower():
                                 display = a.get_text(strip=True) or handle
-                                if handle not in users or users[handle] == handle:
-                                    users[handle] = display
+                                if handle not in users or users[handle].get("name") == handle:
+                                    users[handle] = {"name": display, "avatar": avatar_url}
                                 found_in_page = True
 
                 if not found_in_page:
@@ -184,10 +191,37 @@ class LetterboxdTrackerApp(ctk.CTk):
         followers = self._fetch_users(session, username, "followers")
 
         not_following_handles = set(following.keys()) - set(followers.keys())
-        not_following_list = [(h, following[h]) for h in not_following_handles]
+        not_following_list = [(h, following[h]["name"], following[h]["avatar"]) for h in not_following_handles]
         not_following_list.sort(key=lambda x: x[1].lower())
 
         self.after(0, lambda: self._update_ui_results(following, followers, not_following_list))
+
+    def _make_circle_image(self, image, size=(36, 36)):
+        image = image.convert("RGBA").resize(size, Image.Resampling.LANCZOS)
+        mask = Image.new("L", size, 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0, size[0], size[1]), fill=255)
+        
+        output = Image.new("RGBA", size, (0, 0, 0, 0))
+        output.paste(image, (0, 0), mask=mask)
+        return output
+
+    def _load_image(self, url, label_widget):
+        if not url:
+            return
+        try:
+            if url.startswith("//"):
+                url = "https:" + url
+                
+            res = cffi_requests.get(url, impersonate="chrome")
+            if res.status_code == 200:
+                img_data = res.content
+                image = Image.open(io.BytesIO(img_data))
+                circle_img = self._make_circle_image(image, size=(36, 36))
+                ctk_image = ctk.CTkImage(light_image=circle_img, dark_image=circle_img, size=(36, 36))
+                self.after(0, lambda: label_widget.configure(image=ctk_image, text=""))
+        except Exception:
+            pass
 
     def _update_ui_results(self, following, followers, not_following_list):
         self.btn_search.configure(state="normal")
@@ -215,9 +249,20 @@ class LetterboxdTrackerApp(ctk.CTk):
             lbl_empty.pack(pady=30)
             return
 
-        for handle, display_name in not_following_list:
+        for handle, display_name, avatar_url in not_following_list:
             row = ctk.CTkFrame(self.scroll_list, fg_color=COLOR_BG, corner_radius=6, border_width=1, border_color=COLOR_BORDER)
             row.pack(fill="x", padx=5, pady=4)
+
+            lbl_avatar = ctk.CTkLabel(
+                row, 
+                text="👤", 
+                width=36, height=36, 
+                font=ctk.CTkFont(size=18),
+                text_color=COLOR_TEXT
+            )
+            lbl_avatar.pack(side="left", padx=(12, 0), pady=8)
+
+            threading.Thread(target=self._load_image, args=(avatar_url, lbl_avatar), daemon=True).start()
 
             name_box = ctk.CTkFrame(row, fg_color="transparent")
             name_box.pack(side="left", padx=12, pady=8)

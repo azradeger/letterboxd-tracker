@@ -3,7 +3,7 @@
 # 🎬 Letterboxd Tracker
 ### A clean, modern desktop tool to find who isn't following you back on Letterboxd.
 
-[![Release](https://img.shields.io/badge/Release-v1.0.0-00e054?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/azradeger/letterboxd-tracker/releases)
+[![Release](https://img.shields.io/badge/Release-v1.1.0-00e054?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/azradeger/letterboxd-tracker/releases)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
@@ -18,6 +18,7 @@ Letterboxd does not provide a direct way to view mutual follows or see who doesn
 ## ✨ Features
 
 * **Zero Installation for Users:** Distributed as a standalone portable `.exe` — no Python setup needed.
+* **Circular Avatars:** Displays profile pictures with clean circular cropping right next to usernames.
 * **Modern Letterboxd UI:** Built with CustomTkinter following Letterboxd's signature dark theme palette.
 * **Anti-Bot Protection Bypass:** Powered by browser-impersonating HTTP requests to handle Cloudflare checks seamlessly.
 * **Direct Profile Navigation:** Open any detected profile directly in your default browser with one click.
@@ -61,6 +62,8 @@ The compiled executable will be generated inside the dist/ folder.
 
 🧰 Tech Stack
 UI: CustomTkinter
+
+Image Processing: Pillow (PIL)
 
 Scraping: BeautifulSoup4
 
